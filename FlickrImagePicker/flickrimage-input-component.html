@@ -136,7 +136,7 @@
                     img += `<div class='title'>${item.title}</div></div>`;
                     $(img).appendTo("#flickrImages");
                 }).error(function() {
-                    $(img).appendTo("Page cannot be loaded");
+                    $("Page cannot be loaded").appendTo("#flickrImages");
                 });
 
                 updateSize();
