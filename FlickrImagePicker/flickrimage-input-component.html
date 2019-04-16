@@ -92,7 +92,7 @@
             }
         }
 
-        function setupFlickrImageSelector(value, totalimages, apikey, params) {
+        function setupFlickrImageSelector(value, totalimages, apikey, secret, params) {
             //Set trigger on enter key on the search field
             const input = document.querySelector('#search');
             input.addEventListener("keyup", function (event) {
@@ -108,7 +108,7 @@
 
             //Bind method to search on Flickr to the search button
             $("#submit").on("click", function () {
-                searchFlickr(totalimages, apikey, params);
+                searchFlickr(totalimages, apikey, secret, params);
             });
 
             $("#clear").on("click", function () {
@@ -123,7 +123,7 @@
             return value == null || value == "";
         }
 
-        function searchFlickr(totalimages, apikey, params) {
+        function searchFlickr(totalimages, apikey, secret, params) {
             $("#flickrImages").html("");
 
             /*Clean all empty parameters and generate querystring for api call*/
@@ -138,14 +138,13 @@
             $.getJSON(flickrAPI + "&format=json&jsoncallback=?", function (data) {
                 try {
                     $.each(data.photos.photo, function (i, item) {
-                        img = `<div class='gallery'><img class='flickrimg' src='https://farm${item.farm}.static.flickr.com/${item.server}/${item.id}_${item.secret}_m.jpg'/>`;
+                        img = `<div class='gallery'><img class='flickrimg' src='https://farm${item.farm}.static.flickr.com/${item.server}/${item.id}_${secret}_m.jpg'/>`;
                         img += `<div class='title'>${item.title}</div></div>`;
                         $(img).appendTo("#flickrImages");
                     });
                 } catch (err) {
                     // Initialization with Kentico Custom element API failed (page displayed outside of the Kentico UI)
                     console.error(err);
-                    updateDisabled(true);
                     $("<div class='error'><strong>Images cannot be loaded</strong><br/>Check if you're API key and secret are correct.</div>").appendTo("#flickrImages");
                     updateSize();
                 }
@@ -189,6 +188,7 @@
                 CustomElement.init((element, _context) => {
                     var totalimages = 25;
                     var apikey = "";
+                    var secret = "";
                     var params = {
                         user_id: "",
                         min_upload_date: "",
@@ -205,6 +205,7 @@
                     if (element.config) {
                         if (element.config.totalimages) totalimages = element.config.totalimages;
                         if (element.config.apikey) apikey = element.config.apikey;
+                        if (element.config.secret) secret = element.config.scret;
                         if (element.config.userid) params["user_id"] = element.config.userid;
                         if (element.config.min_upload_date) params["min_upload_date"] = element.config.min_upload_date;
                         if (element.config.max_upload_date) params["max_upload_date"] = element.config.max_upload_date;
@@ -218,7 +219,7 @@
                     }
                     // Setup with initial value and disabled state
                     updateDisabled(element.disabled);
-                    setupFlickrImageSelector(element.value, totalimages, apikey, params);
+                    setupFlickrImageSelector(element.value, totalimages, apikey, secret, params);
                     updateSize();
                 });
                 // React on disabled changed (e.g. when publishing the item)
