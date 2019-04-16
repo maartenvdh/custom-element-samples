@@ -138,7 +138,7 @@
             $.getJSON(flickrAPI + "&format=json&jsoncallback=?", function (data) {
                 try {
                     $.each(data.photos.photo, function (i, item) {
-                        img = `<div class='gallery'><img class='flickrimg' src='https://farm${item.farm}.static.flickr.com/${item.server}/${item.id}_${secret}_m.jpg'/>`;
+                        img = `<div class='gallery'><img class='flickrimg' src='https://farm${item.farm}.staticflickr.com/${item.server}/${item.id}_${secret}.jpg'/>`;
                         img += `<div class='title'>${item.title}</div></div>`;
                         $(img).appendTo("#flickrImages");
                     });
