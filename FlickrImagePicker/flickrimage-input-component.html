@@ -129,7 +129,7 @@
             /*Clean all empty parameters and generate querystring for api call*/
             for (key in params)
                 if (isEmpty(params[key]))
-                    delete params[key]; 
+                    delete params[key];
             var queryString = $.param(params);
 
             /*jQuery AJAX Method*/
