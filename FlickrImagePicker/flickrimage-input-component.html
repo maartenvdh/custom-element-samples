@@ -131,13 +131,18 @@
             var flickrAPI = `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apikey}&text=${$("#search").val()}&safe_search=1&per_page=${totalimages}&${queryString}`;
 
             $.getJSON(flickrAPI + "&format=json&jsoncallback=?", function (data) {
-                $.each(data.photos.photo, function (i, item) {
-                    img = `<div class='gallery'><img class='flickrimg' src='https://farm${item.farm}.static.flickr.com/${item.server}/${item.id}_${item.secret}_m.jpg'/>`;
-                    img += `<div class='title'>${item.title}</div></div>`;
-                    $(img).appendTo("#flickrImages");
-                }).error(function() {
+                try {
+                    $.each(data.photos.photo, function (i, item) {
+                        img = `<div class='gallery'><img class='flickrimg' src='https://farm${item.farm}.static.flickr.com/${item.server}/${item.id}_${item.secret}_m.jpg'/>`;
+                        img += `<div class='title'>${item.title}</div></div>`;
+                        $(img).appendTo("#flickrImages");
+                    });
+                } catch (err) {
+                    // Initialization with Kentico Custom element API failed (page displayed outside of the Kentico UI)
+                    console.error(err);
+                    updateDisabled(true);
                     $("Page cannot be loaded").appendTo("#flickrImages");
-                });
+                }
 
                 updateSize();
 
